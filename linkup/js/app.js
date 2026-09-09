@@ -545,4 +545,8 @@
     refreshChats,
     renderContactsState,
   };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    LinkUpApp.init();
+  });
 })();
