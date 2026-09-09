@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: linkup
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    rootDir: server
+    envVars:
+      - key: PORT
+        value: 3000
