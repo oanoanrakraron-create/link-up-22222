@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: linkup
+    runtime: node
+    plan: free
+    buildCommand: cd linkup/server && npm install
+    startCommand: cd linkup/server && node index.js
