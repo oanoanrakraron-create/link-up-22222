@@ -1,0 +1,15 @@
+{
+  "name": "linkup-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LinkUp mesh backend: Express + WebSocket + better-sqlite3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.19.2",
+    "ws": "^8.17.0"
+  }
+}

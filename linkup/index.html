@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0e1621">
+  <title>LinkUp — мессенджер</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== Экран входа ===== -->
+  <div id="screen-auth" class="screen auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <img src="icon.svg" alt="LinkUp" width="72" height="72">
+        <h1>LinkUp</h1>
+        <p>Чаты, группы и звонки</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="tab-btn active" data-tab="login">Вход</button>
+        <button class="tab-btn" data-tab="register">Регистрация</button>
+      </div>
+
+      <form id="form-login" class="auth-form">
+        <label>Имя пользователя или почта
+          <input id="login-id" type="text" placeholder="например, alex" autocomplete="username">
+        </label>
+        <label>Пароль
+          <input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn-primary">Войти</button>
+        <p class="auth-hint" id="login-hint"></p>
+      </form>
+
+      <form id="form-register" class="auth-form hidden">
+        <label>Имя
+          <input id="reg-first" type="text" placeholder="Имя" autocomplete="given-name">
+        </label>
+        <label>Имя пользователя
+          <input id="reg-username" type="text" placeholder="латиницей: alex25" autocomplete="username">
+        </label>
+        <label>Почта
+          <input id="reg-email" type="email" placeholder="you@mail.ru" autocomplete="email">
+        </label>
+        <label>Пароль
+          <input id="reg-pass" type="password" placeholder="минимум 6 символов" autocomplete="new-password">
+        </label>
+        <button type="submit" class="btn-primary">Создать аккаунт</button>
+        <p class="auth-hint" id="reg-hint"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Основной интерфейс ===== -->
+  <div id="screen-app" class="screen app-screen hidden">
+    <div class="app-container">
+
+      <!-- Левая панель -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="me-row">
+            <div class="avatar" id="me-avatar">..</div>
+            <div class="me-info">
+              <div class="me-name" id="me-name">—</div>
+              <div class="me-username" id="me-username">@—</div>
+            </div>
+            <button class="icon-btn" id="btn-logout" title="Выйти">⎋</button>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">⌕</span>
+            <input id="search-input" type="text" placeholder="Поиск людей и чатов...">
+          </div>
+        </div>
+
+        <nav class="sidebar-tabs">
+          <button class="sb-tab active" data-tab="chats">💬 Чаты</button>
+          <button class="sb-tab" data-tab="contacts">👥 Люди</button>
+        </nav>
+
+        <div class="list-wrap">
+          <div id="chats-list" class="list"></div>
+          <div id="contacts-list" class="list hidden"></div>
+        </div>
+      </aside>
+
+      <!-- Правая область чата -->
+      <main class="chat-area" id="chat-area">
+        <div class="chat-empty" id="chat-empty">
+          <img src="icon.svg" alt="LinkUp" width="96" height="96" style="filter: grayscale(.6); opacity:.5">
+          <h2>LinkUp</h2>
+          <p>Выберите чат, чтобы начать общение</p>
+        </div>
+
+        <!-- Активный чат (рендерится динамически) -->
+        <div id="chat-window" class="chat-window hidden"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== Модалки ===== -->
+  <div id="modal-root"></div>
+
+  <!-- ===== Оверлей звонка ===== -->
+  <div id="call-overlay" class="call-overlay hidden">
+    <div class="call-box">
+      <div class="call-peer">
+        <div class="avatar big" id="call-avatar">..</div>
+        <div class="call-name" id="call-name">—</div>
+        <div class="call-state" id="call-state">Звонок...</div>
+        <div class="call-time" id="call-timer">00:00</div>
+      </div>
+      <div class="call-videos">
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay playsinline muted></video>
+      </div>
+      <div class="call-actions">
+        <button class="call-btn" id="call-toggle-mic" title="Микрофон">🎤</button>
+        <button class="call-btn danger" id="call-hangup" title="Завершить">📞</button>
+        <button class="call-btn" id="call-toggle-video" title="Камера">📹</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Входящий звонок ===== -->
+  <div id="incoming-overlay" class="incoming-overlay hidden">
+    <div class="call-box">
+      <div class="call-peer">
+        <div class="avatar big" id="incoming-avatar">..</div>
+        <div class="call-name" id="incoming-name">—</div>
+        <div class="call-state" id="incoming-state">Входящий звонок...</div>
+      </div>
+      <div class="call-actions">
+        <button class="call-btn danger" id="incoming-decline" title="Отклонить">✕</button>
+        <button class="call-btn" id="incoming-accept" title="Ответить" style="background:var(--success)">📞</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Панель эмодзи ===== -->
+  <div id="emoji-panel" class="emoji-panel hidden"></div>
+
+  <!-- Скрипты -->
+  <script src="js/api.js"></script>
+  <script src="js/ws-client.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/signaling.js"></script>
+  <script src="js/rtc.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
